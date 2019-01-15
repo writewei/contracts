@@ -1,0 +1,15 @@
+{
+  "name": "@writewei/contracts",
+  "version": "0.0.1",
+  "description": "Contracts for storing markdown documents",
+  "main": "index.js",
+  "scripts": {
+    "build": "truffle compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chance Hudson",
+  "license": "MIT",
+  "devDependencies": {
+    "truffle": "^5.0.1"
+  }
+}
