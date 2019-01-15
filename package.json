@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "truffle compile",
+    "ganache": "ganache-cli -b 10 -p 7545",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chance Hudson",
   "license": "MIT",
   "devDependencies": {
+    "ganache-cli": "^6.2.5",
     "truffle": "^5.0.1"
   }
 }
