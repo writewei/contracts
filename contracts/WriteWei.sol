@@ -14,7 +14,7 @@ contract WriteWei {
     uint256 weiValue;
   }
 
-  Document[] documents;
+  Document[] public documents;
 
   struct DocumentUpdate {
     uint256 documentIndex;
@@ -28,7 +28,7 @@ contract WriteWei {
    *
    * Documents are not added here until initial payment occurs
    **/
-  mapping (uint256 => uint256) documentBalances;
+  mapping (uint256 => uint256) public documentBalances;
 
   /**
    * Descending list of document indexes by total value
