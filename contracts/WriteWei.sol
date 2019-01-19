@@ -3,7 +3,7 @@ pragma solidity 0.5.0;
 contract WriteWei {
 
   /**
-   * An updateable markdown document stored on IPFS.
+   * An IPFS address tied to a balance that can be paid to.
    **/
   struct Document {
     uint256 index;
@@ -15,6 +15,13 @@ contract WriteWei {
   }
 
   Document[] documents;
+
+  struct DocumentUpdate {
+    uint256 documentIndex;
+    string oldCid;
+    string newCid;
+    uint256 timestamp;
+  }
 
   /**
    * Document balances by index
@@ -29,12 +36,11 @@ contract WriteWei {
   uint256[] documentsByValue;
 
   /**
-   * Descending list of document indexes by last modified
+   * Infinite list of document updates, load from end
    **/
-  uint256[] documentsByTime;
+  DocumentUpdate[] documentUpdates;
 
-
-  function publishDocuments(string memory _cid) public {
+  function createDocument(string memory _cid) public {
     documents.push(Document({
       index: documents.length,
       cid: _cid,
@@ -48,6 +54,12 @@ contract WriteWei {
   function updateDocument(uint256 index, string memory _cid) public {
     require(index < documents.length);
     require(msg.sender == documents[index].author);
+    documentUpdates.push(DocumentUpdate({
+      documentIndex: index,
+      oldCid: documents[index].cid,
+      newCid: _cid,
+      timestamp: block.timestamp
+    }));
     documents[index].cid = _cid;
   }
 
@@ -61,6 +73,14 @@ contract WriteWei {
     require(index < documents.length);
     documentBalances[index] = 0;
     receiver.transfer(documentBalances[index]);
+  }
+
+  function documentUpdateCount() public view returns (uint256) {
+    return documentUpdates.length;
+  }
+
+  function documentCount() public view returns (uint256) {
+    return documents.length;
   }
 
 }
