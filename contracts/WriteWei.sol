@@ -17,11 +17,9 @@ contract WriteWei {
   Document[] public documents;
 
   /**
-   * Document balances by index
-   *
-   * Documents are not added here until initial payment occurs
+   * Author balances
    **/
-  mapping (uint256 => uint256) public documentBalances;
+  mapping (address payable => uint256) public authorBalances;
 
   /**
    * Create a new document entry using an IPFS cid
@@ -53,16 +51,16 @@ contract WriteWei {
   function payDocument(uint256 index) public payable {
     require(index < documents.length);
     documents[index].weiValue += msg.value;
-    documentBalances[index] += msg.value;
+    authorBalances[documents[index].author] += msg.value;
   }
 
   /**
    * Withdraw the balance from a document to the author
    **/
-  function withdrawDocumentBalance(uint256 index) public {
-    require(index < documents.length);
-    documentBalances[index] = 0;
-    documents[index].author.transfer(documentBalances[index]);
+  function withdraw() public {
+    uint256 balance = authorBalances[msg.sender];
+    authorBalances[msg.sender] = 0;
+    msg.sender.transfer(balance);
   }
 
   /**
