@@ -1,3 +1,12 @@
 node_modules/
 .DS_Store
 build/
+*.tmp
+*.swp
+
+# solidity-coverage
+coverage/
+coverage.json
+coverageEnv/
+scTopics
+allFiredEvents
