@@ -40,6 +40,9 @@ contract WriteWei {
    **/
   DocumentUpdate[] documentUpdates;
 
+  /**
+   * Create a new document entry using an IPFS cid
+   **/
   function createDocument(string memory _cid) public {
     documents.push(Document({
       index: documents.length,
@@ -51,6 +54,9 @@ contract WriteWei {
     }));
   }
 
+  /**
+   * Update the cid for a document
+   **/
   function updateDocument(uint256 index, string memory _cid) public {
     require(index < documents.length);
     require(msg.sender == documents[index].author);
@@ -63,22 +69,34 @@ contract WriteWei {
     documents[index].cid = _cid;
   }
 
+  /**
+   * Send ether to the author of a document
+   **/
   function payDocument(uint256 index) public payable {
     require(index < documents.length);
     documents[index].weiValue += msg.value;
     documentBalances[index] += msg.value;
   }
 
-  function withdrawDocumentBalance(uint256 index, address payable receiver) public {
+  /**
+   * Withdraw the balance from a document to the author
+   **/
+  function withdrawDocumentBalance(uint256 index) public {
     require(index < documents.length);
     documentBalances[index] = 0;
-    receiver.transfer(documentBalances[index]);
+    documents[index].author.transfer(documentBalances[index]);
   }
 
+  /**
+   * The number of document update entries
+   **/
   function documentUpdateCount() public view returns (uint256) {
     return documentUpdates.length;
   }
 
+  /**
+   * The number of documents
+   **/
   function documentCount() public view returns (uint256) {
     return documents.length;
   }
