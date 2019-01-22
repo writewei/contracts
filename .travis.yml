@@ -1,0 +1,10 @@
+dist: xenial
+sudo: required
+
+language: node_js
+node_js:
+  10
+
+script:
+  - npm run ganache &
+  - npm run coverage
