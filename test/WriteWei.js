@@ -3,6 +3,7 @@ const assert = require('assert');
 const BN = require('bn.js');
 
 contract('WriteWei', accounts => {
+  
   it('should create a document', async () => {
     const _contract = await WriteWei.deployed();
     const contract = new web3.eth.Contract(_contract.abi, _contract.address);
@@ -62,5 +63,36 @@ contract('WriteWei', accounts => {
     const createdDocument = await contract.methods.documents(documentIndex).call();
     assert.equal(createdDocument.isDeleted, true);
     assert.equal(createdDocument.cid, '');
+  });
+
+  it('should withdraw author balance', async () => {
+    const _contract = await WriteWei.deployed();
+    const contract = new web3.eth.Contract(_contract.abi, _contract.address);
+    const documentCid = 'QmaafpMEtK4ts455XJ2EyWXxuLzgi2hR8jNUjH2CMToXdn';
+    const author = accounts[0];
+    const paymentValue = 1000;
+    // Zero the balance
+    await contract.methods.withdraw().send({
+      from: author
+    });
+    await contract.methods.createDocument(documentCid).send({
+      from: author,
+      gas: 300000
+    });
+    const documentIndex = await contract.methods.documentCount().call() - 1;
+    await contract.methods.payDocument(documentIndex).send({
+      from: accounts[1],
+      value: paymentValue,
+      gas: 300000
+    });
+
+    const authorBalance = await contract.methods.authorBalances(author).call();
+    assert.equal(authorBalance, paymentValue);
+    await contract.methods.withdraw().send({
+      from: author,
+      gas: 300000
+    });
+    const updatedAuthorBalance = await contract.methods.authorBalances(author).call();
+    assert.equal(updatedAuthorBalance, 0);
   });
 });
