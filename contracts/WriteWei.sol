@@ -56,7 +56,7 @@ contract WriteWei {
   }
 
   /**
-   * Withdraw the balance from a document to the author
+   * Withdraw the balance from contract to author
    **/
   function withdraw() public {
     uint256 balance = authorBalances[msg.sender];
