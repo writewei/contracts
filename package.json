@@ -9,7 +9,8 @@
     "test": "truffle test",
     "coverage": "solidity-coverage && lcov-badge-generator ./coverage/lcov.info -o ./test/badge.svg",
     "deploy": "npm run clean && truffle migrate --network development",
-    "ganache": "ganache-cli -b 10 -p 7545"
+    "ganache": "ganache-cli -b 10 -p 7545",
+    "postinstall": "./scripts/postinstall.sh"
   },
   "author": "Chance Hudson",
   "license": "MIT",
@@ -17,7 +18,7 @@
     "ganache-cli": "^6.2.5",
     "lcov-badge-generator": "^1.0.5",
     "solidity-coverage": "^0.5.11",
-    "truffle": "^5.0.1"
+    "truffle": "^5.0.2"
   },
   "dependencies": {
     "web3": "^1.0.0-beta.37"
