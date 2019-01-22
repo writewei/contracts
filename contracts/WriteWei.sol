@@ -21,6 +21,9 @@ contract WriteWei {
    **/
   mapping (address => uint256) public authorBalances;
 
+  event DocumentUpdated(uint256 index);
+  event BalanceUpdated(address payable target);
+
   /**
    * Create a new document entry using an IPFS cid
    **/
@@ -33,6 +36,7 @@ contract WriteWei {
       weiValue: 0,
       isDeleted: false
     }));
+    emit DocumentUpdated(documents.length - 1);
   }
 
   /**
@@ -44,6 +48,7 @@ contract WriteWei {
     require(msg.sender == documents[index].author);
     documents[index].isDeleted = true;
     documents[index].cid = '';
+    emit DocumentUpdated(index);
   }
 
   /**
@@ -53,6 +58,8 @@ contract WriteWei {
     require(index < documents.length);
     documents[index].weiValue += msg.value;
     authorBalances[documents[index].author] += msg.value;
+    emit DocumentUpdated(index);
+    emit BalanceUpdated(documents[index].author);
   }
 
   /**
@@ -62,6 +69,7 @@ contract WriteWei {
     uint256 balance = authorBalances[msg.sender];
     authorBalances[msg.sender] = 0;
     msg.sender.transfer(balance);
+    emit BalanceUpdated(msg.sender);
   }
 
   /**
