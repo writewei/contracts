@@ -17,4 +17,25 @@ contract('WriteWei', accounts => {
     assert.equal(createdDocument.cid, documentCid);
     assert.equal(createdDocument.author, author);
   });
+
+  it('should pay a document', async () => {
+    const _contract = await WriteWei.deployed();
+    const contract = new web3.eth.Contract(_contract.abi, _contract.address);
+    const documentCid = 'QmaafpMEtK4ts455XJ2EyWXxuLzgi2hR8jNUjH2CMToXdn';
+    const author = accounts[0];
+    const paymentValue = 1000;
+    await contract.methods.createDocument(documentCid).send({
+      from: author,
+      gas: 300000
+    });
+    const documentIndex = await contract.methods.documentCount().call() - 1;
+    const oldAuthorBalance = await contract.methods.authorBalances(author).call();
+    await contract.methods.payDocument(documentIndex).send({
+      from: accounts[1],
+      value: paymentValue,
+      gas: 300000
+    });
+    const authorBalance = await contract.methods.authorBalances(author).call();
+    assert.equal(authorBalance - oldAuthorBalance, paymentValue);
+  });
 });
