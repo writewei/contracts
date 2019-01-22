@@ -64,13 +64,6 @@ contract WriteWei {
   }
 
   /**
-   * The number of document update entries
-   **/
-  function documentUpdateCount() public view returns (uint256) {
-    return documentUpdates.length;
-  }
-
-  /**
    * The number of documents
    **/
   function documentCount() public view returns (uint256) {
