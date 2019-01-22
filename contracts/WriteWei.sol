@@ -19,7 +19,7 @@ contract WriteWei {
   /**
    * Author balances
    **/
-  mapping (address payable => uint256) public authorBalances;
+  mapping (address => uint256) public authorBalances;
 
   /**
    * Create a new document entry using an IPFS cid
@@ -30,19 +30,20 @@ contract WriteWei {
       cid: _cid,
       author: msg.sender,
       timestamp: block.timestamp,
-      weiValue: 0
+      weiValue: 0,
+      isDeleted: false
     }));
   }
 
   /**
    * Delete a document entry from the blockchain. Marks isDeleted true and
-   * clears the cid.
+   * clears the cid
    **/
   function deleteDocument(uint256 index) public {
     require(index < documents.length);
     require(msg.sender == documents[index].author);
     documents[index].isDeleted = true;
-    documents[index].cid = "";
+    documents[index].cid = '';
   }
 
   /**
