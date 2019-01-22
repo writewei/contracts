@@ -3,7 +3,7 @@ pragma solidity 0.5.0;
 contract WriteWei {
 
   /**
-   * An IPFS address tied to a balance that can be paid to.
+   * An IPFS cid tied to an Ethereum address
    **/
   struct Document {
     uint256 index;
@@ -25,7 +25,7 @@ contract WriteWei {
   event BalanceUpdated(address payable target);
 
   /**
-   * Create a new document entry using an IPFS cid
+   * Create a new document using an IPFS cid
    **/
   function createDocument(string memory _cid) public {
     documents.push(Document({
@@ -40,7 +40,7 @@ contract WriteWei {
   }
 
   /**
-   * Delete a document entry from the blockchain. Marks isDeleted true and
+   * Delete a document from the blockchain. Marks isDeleted true and
    * clears the cid
    **/
   function deleteDocument(uint256 index) public {
