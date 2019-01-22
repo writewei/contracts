@@ -8,7 +8,7 @@ contract WriteWei {
   struct Document {
     uint256 index;
     string cid;
-    address author;
+    address payable author;
     uint256 timestamp;
     uint256 weiValue;
     bool isDeleted;
