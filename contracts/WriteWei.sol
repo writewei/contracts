@@ -10,18 +10,11 @@ contract WriteWei {
     string cid;
     address author;
     uint256 timestamp;
-    uint256 updatedTimestamp;
     uint256 weiValue;
+    bool isDeleted;
   }
 
   Document[] public documents;
-
-  struct DocumentUpdate {
-    uint256 documentIndex;
-    string oldCid;
-    string newCid;
-    uint256 timestamp;
-  }
 
   /**
    * Document balances by index
@@ -29,16 +22,6 @@ contract WriteWei {
    * Documents are not added here until initial payment occurs
    **/
   mapping (uint256 => uint256) public documentBalances;
-
-  /**
-   * Descending list of document indexes by total value
-   **/
-  uint256[] documentsByValue;
-
-  /**
-   * Infinite list of document updates, load from end
-   **/
-  DocumentUpdate[] documentUpdates;
 
   /**
    * Create a new document entry using an IPFS cid
@@ -49,24 +32,19 @@ contract WriteWei {
       cid: _cid,
       author: msg.sender,
       timestamp: block.timestamp,
-      updatedTimestamp: block.timestamp,
       weiValue: 0
     }));
   }
 
   /**
-   * Update the cid for a document
+   * Delete a document entry from the blockchain. Marks isDeleted true and
+   * clears the cid.
    **/
-  function updateDocument(uint256 index, string memory _cid) public {
+  function deleteDocument(uint256 index) public {
     require(index < documents.length);
     require(msg.sender == documents[index].author);
-    documentUpdates.push(DocumentUpdate({
-      documentIndex: index,
-      oldCid: documents[index].cid,
-      newCid: _cid,
-      timestamp: block.timestamp
-    }));
-    documents[index].cid = _cid;
+    documents[index].isDeleted = true;
+    documents[index].cid = "";
   }
 
   /**
